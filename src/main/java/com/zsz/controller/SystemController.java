@@ -39,6 +39,7 @@ public class SystemController {
     TeacherService teacherService;
 
     //  http://localhost:8080/sms/system/headerImgUpload
+    @ApiOperation("头像上传")
     @PostMapping("/headerImgUpload")
     public Result headerImgUpload(
             @RequestPart("multipartFile") MultipartFile multipartFile
