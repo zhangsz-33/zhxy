@@ -11,6 +11,7 @@ import com.zsz.service.TeacherService;
 import com.zsz.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,8 +74,10 @@ public class SystemController {
     }
 
     //从请求头中的token信息获取用户类型，并响应用户信息
+    @ApiOperation("从请求头中的token信息中获取用户类型，并响应用户信息")
     @GetMapping("/getInfo")
-    public Result getInfoByToken(@RequestHeader("token") String token){
+    public Result getInfoByToken(
+            @ApiParam("请求头中的token信息") @RequestHeader("token") String token){
         //验证token是否已经失效
         boolean expiration = JwtHelper.isExpiration(token);
         if (expiration){
@@ -104,8 +107,11 @@ public class SystemController {
     }
 
     //将前端提交POST请求的信息封装起来，使用@RequestBody注解
+    @ApiOperation("登录功能实现，首先校验验证码是否失效和正确，然后从提交的表单中判断用户类型，获取不同的响应信息")
     @PostMapping("/login")
-    public Result login(@RequestBody LoginForm loginForm, HttpServletRequest request){
+    public Result login(
+            @ApiParam("用户登录提交的表单") @RequestBody LoginForm loginForm,
+            @ApiParam("请求") HttpServletRequest request){
         //校验用户输入的验证码和session中的验证码
         HttpSession session = request.getSession();
         String sessionVerifiCode = (String)session.getAttribute("verifiCode");
@@ -176,6 +182,7 @@ public class SystemController {
         return Result.fail().message("查无此人!");
     }
 
+    @ApiOperation("获取验证码图片")
     @GetMapping("/getVerifiCodeImage")
     public void getVerifiCodeImage(HttpServletRequest request, HttpServletResponse response){
         //获取验证码图片
@@ -197,9 +204,9 @@ public class SystemController {
     @ApiOperation("修改密码")
     @PostMapping("/updatePwd/{oldPwd}/{newPwd}")
     public Result updatePwd(
-            @PathVariable("oldPwd") String oldPwd,
-            @PathVariable("newPwd") String newPwd,
-            @RequestHeader String token
+            @ApiParam("原密码") @PathVariable("oldPwd") String oldPwd,
+            @ApiParam("新密码") @PathVariable("newPwd") String newPwd,
+            @ApiParam("token信息，用来判断当前登录的用户类型") @RequestHeader String token
     ){
         //判断token是否失效
         boolean expiration = JwtHelper.isExpiration(token);

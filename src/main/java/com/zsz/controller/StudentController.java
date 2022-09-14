@@ -38,7 +38,7 @@ public class StudentController {
     @ApiOperation("新增或更改学生信息")
     @PostMapping("/addOrUpdateStudent")
     public Result addOrUpdateStudent(
-            @RequestBody Student student
+            @ApiParam("请求中携带的要修改信息的学生对象") @RequestBody Student student
     ){
         Integer id = student.getId();
         if (null == id || 0 == id){
@@ -55,7 +55,7 @@ public class StudentController {
     @ApiOperation("删除单个或多个学生信息")
     @DeleteMapping("/delStudentById")
     public Result delStudentById(
-            @RequestBody List<Integer> ids
+            @ApiParam("要删除的学生id的集合") @RequestBody List<Integer> ids
     ){
         studentService.removeByIds(ids);
         return Result.ok();
